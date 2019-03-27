@@ -1,5 +1,5 @@
 [[getting-started]]
-= Getting started
+= 入门
 
 [partintro]
 --
@@ -267,27 +267,28 @@ As mentioned previously, we can override either the cluster or node name. This c
 Also note the line marked http with information about the HTTP address (`192.168.8.112`) and port (`9200`) that our node is reachable from. By default, Elasticsearch uses port `9200` to provide access to its REST API. This port is configurable if necessary.
 
 [[getting-started-explore]]
-== Exploring Your Cluster
+== 探索您的群集
 
 [float]
 === The REST API
 
-Now that we have our node (and cluster) up and running, the next step is to understand how to communicate with it. Fortunately, Elasticsearch provides a very comprehensive and powerful REST API that you can use to interact with your cluster. Among the few things that can be done with the API are as follows:
+现在我们已经启动并运行了节点（和集群），下一步是了解如何与之通信。幸运的是，Elasticsearch提供了一个非常全面和强大的REST API，您可以使用它与集群进行交互。使用API可以完成的一些事项如下：
 
-* Check your cluster, node, and index health, status, and statistics
-* Administer your cluster, node, and index data and metadata
-* Perform CRUD (Create, Read, Update, and Delete) and search operations against your indexes
-* Execute advanced search operations such as paging, sorting, filtering, scripting, aggregations, and many others
+* 检查群集，节点和索引运行状况，状态和统计信息
+* 管理您的群集，节点和索引数据和元数据
+* 对索引执行CRUD（创建，读取，更新和删除）和搜索操作
+* 执行高级搜索操作，例如分页，排序，过滤，脚本编写，聚合等等
 
 [[getting-started-cluster-health]]
-=== Cluster Health
+=== 群集健康
 
-Let's start with a basic health check, which we can use to see how our cluster is doing. We'll be using curl to do this but you can use any tool that allows you to make HTTP/REST calls. Let's assume that we are still on the same node where we started Elasticsearch on and open another command shell window.
+让我们从基本运行状况检查开始，我们可以使用它来查看集群的运行情况。我们将使用curl来执行此操作，但您可以使用任何允许您进行HTTP/REST调用的工具。假设我们仍然在我们启动Elasticsearch的同一节点上打开另一个命令shell窗口。
 
-To check the cluster health, we will be using the {ref}/cat.html[`_cat` API]. You can
+You can
 run the command below in {kibana-ref}/console-kibana.html[Kibana's Console]
 by clicking "VIEW IN CONSOLE" or with `curl` by clicking the "COPY AS CURL"
 link below and pasting it into a terminal.
+要检查群集运行状况，我们将使用{ref}/cat.html [`_cat` API]。您可以通过单击“VIEW IN CONSOLE”在{kibana-ref}/console-kibana.html[Kibana的控制台]中查看或单击下面的“COPY AS CURL”链接并将其粘贴到终端中使用`curl`查看，。
 
 [source,js]
 --------------------------------------------------
@@ -295,7 +296,7 @@ GET /_cat/health?v
 --------------------------------------------------
 // CONSOLE
 
-And the response:
+响应:
 
 [source,txt]
 --------------------------------------------------
@@ -306,19 +307,19 @@ epoch      timestamp cluster       status node.total node.data shards pri relo i
 // TESTRESPONSE[s/0             0                  -/0             \\d+                  -/]
 // TESTRESPONSE[_cat]
 
-We can see that our cluster named "elasticsearch" is up with a green status.
+我们可以看到名为“elasticsearch”的集群处于绿色状态。
 
-Whenever we ask for the cluster health, we either get green, yellow, or red.
+每当我们要查看集群健康时，我们得到green（正常）, yellow（警告）, red（严重）三种状态。
 
-    * Green - everything is good (cluster is fully functional)
-    * Yellow - all data is available but some replicas are not yet allocated (cluster is fully functional)
-    * Red - some data is not available for whatever reason (cluster is partially functional)
+    * Green - 一切都很好（集群功能齐全）
+    * Yellow - 所有数据都可用，但尚未分配一些副本（群集功能齐全）
+    * Red - 某些数据由于某种原因不可用（群集部分功能）
 
-**Note:** When a cluster is red, it will continue to serve search requests from the available shards but you will likely need to fix it ASAP since there are unassigned shards.
+**注意:** 当群集为红色时，它将继续提供来自可用分片的搜索请求，但您可能需要尽快修复它，因为存在未分配的分片。
 
-Also from the above response, we can see a total of 1 node and that we have 0 shards since we have no data in it yet. Note that since we are using the default cluster name (elasticsearch) and since Elasticsearch uses unicast network discovery by default to find other nodes on the same machine, it is possible that you could accidentally start up more than one node on your computer and have them all join a single cluster. In this scenario, you may see more than 1 node in the above response.
+同样从上面的响应中，我们可以看到总共1个节点，并且我们有0个分片，因为集群中还没有数据。请注意，由于我们使用默认群集名称（elasticsearch），并且由于Elasticsearch默认使用单播网络发现（unicast network discovery）来查找同一台计算机上的其他节点，因此您可能会意外启动计算机上的多个节点并让它们都加入一个单一集群。在这种情况下，您可能会在上面的响应中看到多个节点。
 
-We can also get a list of nodes in our cluster as follows:
+我们还可以获得群集中的节点列表，如下所示:
 
 [source,js]
 --------------------------------------------------
@@ -326,7 +327,7 @@ GET /_cat/nodes?v
 --------------------------------------------------
 // CONSOLE
 
-And the response:
+响应:
 
 [source,txt]
 --------------------------------------------------
@@ -337,6 +338,7 @@ ip        heap.percent ram.percent cpu load_1m load_5m load_15m node.role master
 // TESTRESPONSE[s/[*]/[*]/ s/PB2SGZY/.+/ _cat]
 
 Here, we can see our one node named "PB2SGZY", which is the single node that is currently in our cluster.
+在这里，我们可以看到一个名为“PB2SGZY”的节点，它是当前在我们集群中的单个节点。
 
 [[getting-started-list-indices]]
 === List All Indices
