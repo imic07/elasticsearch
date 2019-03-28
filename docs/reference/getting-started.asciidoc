@@ -786,8 +786,8 @@ GET /bank/_search?q=*&sort=account_number:asc&pretty
 ** `hits.total.value` - 总命中数的值（必须在上下文hits.total.relation中解释执行）。
 ** `hits.total.relation` - `hits.total.value` 是否是确切的命中计数，在这种情况下它等于"eq"或总命中数的下限（大于或等于），在这种情况下它等于gte。
 * `hits.hits` – 实际的搜索结果数组（默认最前面10个文档）
-* `hits.sort` - 对结果进行排序键（如果按score排序则此字段不存在）sort key for results (missing if sorting by score)
-* `hits._score` and `max_score` - ignore these fields for now
+* `hits.sort` - 排序结果的关键字（如果按score排序则此字段不存在）
+* `hits._score` 和 `max_score` - 暂时忽略这些字段
 
 The accuracy of `hits.total` is controlled by the request parameter `track_total_hits`, when set to true
 the request will track the total hits accurately (`"relation": "eq"`). It defaults to `10,000`
@@ -796,7 +796,10 @@ You can force an accurate count by setting `track_total_hits` to true explicitly
 See the <<search-request-track-total-hits, request body>> documentation
 for more details.
 
+ `hits.total` 参数的由请求参数 `track_total_hits`控制，当设置为true时，请求将准确的跟踪总命中数（"relation": "eq"）。默认为10,000 这意味着总命中数被准确地跟踪到10,000文档。您可以通过显式设置track_total_hits为true 来强制进行准确计数。有关详细信息，请参阅<<search-request-track-total-hits, request body>>文档。
+
 Here is the same exact search above using the alternative request body method:
+以下是使用请求正文方法替代的上述搜索，结果完全相同：
 
 [source,js]
 --------------------------------------------------
@@ -811,7 +814,7 @@ GET /bank/_search
 // CONSOLE
 // TEST[continued]
 
-The difference here is that instead of passing `q=*` in the URI, we provide a JSON-style query request body to the `_search` API. We'll discuss this JSON query in the next section.
+这里的不同之处在于，我们不是在URI中传入q=*，而是向 `_search` API提供JSON样式的查询请求体。我们将在下一节讨论这个JSON查询。
 
 ////
 Hidden response just so we can assert that it is indeed the same but don't have
@@ -858,14 +861,14 @@ to clutter the docs with it:
 
 ////
 
-It is important to understand that once you get your search results back, Elasticsearch is completely done with the request and does not maintain any kind of server-side resources or open cursors into your results. This is in stark contrast to many other platforms such as SQL wherein you may initially get a partial subset of your query results up-front and then you have to continuously go back to the server if you want to fetch (or page through) the rest of the results using some kind of stateful server-side cursor.
+重要的是要理解，一旦您获得了搜索结果，Elasticsearch就完全完成了请求，并且不会在结果中维护任何类型的服务器端资源或打开游标。这与SQL等许多其他平台形成鲜明对比，其中您可能最初预先获得查询结果的部分子集，然后如果要获取（或翻页）其余的则必须连续返回服务器使用某种有状态服务器端游标的结果。
 
 [[getting-started-query-lang]]
-=== Introducing the Query Language
+=== 介绍查询语言
 
-Elasticsearch provides a JSON-style domain-specific language that you can use to execute queries. This is referred to as the {ref}/query-dsl.html[Query DSL]. The query language is quite comprehensive and can be intimidating at first glance but the best way to actually learn it is to start with a few basic examples.
+Elasticsearch提供了一种JSON样式的特定领域的语言，可用于执行查询。这被称为{ref}/query-dsl.html[Query DSL]。查询语言非常全面，乍一看可能令人生畏，但实际学习它的最佳方法是从一些基本示例开始。
 
-Going back to our last example, we executed this query:
+回到上一个例子，我们执行了这个查询：
 
 [source,js]
 --------------------------------------------------
@@ -877,11 +880,9 @@ GET /bank/_search
 // CONSOLE
 // TEST[continued]
 
-Dissecting the above, the `query` part tells us what our query definition is and the `match_all` part is simply the type of query that we want to run. The `match_all` query is simply a search for all documents in the specified index.
+解析上面的内容，该query部分告诉我们查询定义是什么，match_all部分只是我们想要运行的查询类型。match_all查询仅仅是在指定索引的所有文档中进行搜索。
 
-In addition to the `query` parameter, we also can pass other parameters to
-influence the search results. In the example in the section above we passed in
-`sort`, here we pass in `size`:
+除了query参数，我们还可以传递其他参数来影响搜索结果。在上面的部分示例中，我们传入了`sort`，这里我们传入size：
 
 [source,js]
 --------------------------------------------------
@@ -1324,9 +1325,9 @@ GET /bank/_search
 // CONSOLE
 // TEST[continued]
 
-There are many other aggregations capabilities that we won't go into detail here. The {ref}/search-aggregations.html[aggregations reference guide] is a great starting point if you want to do further experimentation.
+还有许多其他聚合功能，我们在此不再详述。如果您想进行进一步的实验，{ref}/search-aggregations.html [聚合参考指南]是一个很好的起点。
 
 [[getting-started-conclusion]]
-== Conclusion
+== 结论
 
-Elasticsearch is both a simple and complex product. We've so far learned the basics of what it is, how to look inside of it, and how to work with it using some of the REST APIs. Hopefully this tutorial has given you a better understanding of what Elasticsearch is and more importantly, inspired you to further experiment with the rest of its great features!
+Elasticsearch既简单又复杂。到目前为止，我们已经了解了它的基础知识，如何查看它，以及如何使用一些REST API来处理它。希望本教程能让您更好地了解Elasticsearch的内容，更重要的是，启发您进一步尝试其余的强大功能！
