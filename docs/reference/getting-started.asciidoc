@@ -435,7 +435,7 @@ GET /customer/_doc/1?pretty
 // CONSOLE
 // TEST[continued]
 
-And the response:
+响应:
 
 [source,js]
 --------------------------------------------------
@@ -452,12 +452,12 @@ And the response:
 --------------------------------------------------
 // TESTRESPONSE[s/"_seq_no" : \d+/"_seq_no" : $body._seq_no/ s/"_primary_term" : 1/"_primary_term" : $body._primary_term/]
 
-Nothing out of the ordinary here other than a field, `found`, stating that we found a document with the requested ID 1 and another field, `_source`, which returns the full JSON document that we indexed from the previous step.
+除了字段 `found` 之外，这里没有任何不同，说明我们找到了一个具有请求的ID 1和另一个字段 `_source` 的文档，它返回我们从上一步索引的完整JSON文档。
 
 [[getting-started-delete-index]]
-=== Delete an Index
+=== 删除索引
 
-Now let's delete the index that we just created and then list all the indexes again:
+现在让我们删除刚刚创建的索引，然后再次列出所有索引：
 
 [source,js]
 --------------------------------------------------
@@ -475,9 +475,9 @@ health status index uuid pri rep docs.count docs.deleted store.size pri.store.si
 --------------------------------------------------
 // TESTRESPONSE[_cat]
 
-Which means that the index was deleted successfully and we are now back to where we started with nothing in our cluster.
+这意味着索引已成功删除，现在我们回到了我们启动集群时没有任何内容的时候。
 
-Before we move on, let's take a closer look again at some of the API commands that we have learned so far:
+在我们继续往下看之前，让我们再仔细看看到目前为止我们学到的一些API命令：
 
 [source,js]
 --------------------------------------------------
@@ -491,7 +491,7 @@ DELETE /customer
 --------------------------------------------------
 // CONSOLE
 
-If we study the above commands carefully, we can actually see a pattern of how we access data in Elasticsearch. That pattern can be summarized as follows:
+如果我们仔细研究上述命令，我们实际上可以看到如何在Elasticsearch中访问数据的模式。该模式可归纳如下：
 
 [source,js]
 --------------------------------------------------
@@ -499,17 +499,17 @@ If we study the above commands carefully, we can actually see a pattern of how w
 --------------------------------------------------
 // NOTCONSOLE
 
-This REST access pattern is so pervasive throughout all the API commands that if you can simply remember it, you will have a good head start at mastering Elasticsearch.
+这种REST访问模式在所有API命令中都非常普遍，如果您能够简单地记住它，您将在掌握Elasticsearch方面有一个良好的开端。
 
 [[getting-started-modify-data]]
-== Modifying Your Data
+== 修改您的数据
 
-Elasticsearch provides data manipulation and search capabilities in near real time. By default, you can expect a one second delay (refresh interval) from the time you index/update/delete your data until the time that it appears in your search results. This is an important distinction from other platforms like SQL wherein data is immediately available after a transaction is completed.
+Elasticsearch几乎实时提供数据操作和搜索功能。默认情况下，从开始索引/更新/删除数据到在搜索结果中显示，您可能会有一秒钟的延迟（刷新间隔）。这是与SQL（数据在事务完成后立即可用）等其他平台的重要区别。
 
 [float]
-=== Indexing/Replacing Documents
+=== 索引/替换 文档
 
-We've previously seen how we can index a single document. Let's recall that command again:
+我们之前已经看到了如何索引单个文档。让我们再次回忆一下这个命令：
 
 [source,js]
 --------------------------------------------------
@@ -520,7 +520,7 @@ PUT /customer/_doc/1?pretty
 --------------------------------------------------
 // CONSOLE
 
-Again, the above will index the specified document into the customer index, with the ID of 1. If we then executed the above command again with a different (or same) document, Elasticsearch will replace (i.e. reindex) a new document on top of the existing one with the ID of 1:
+同样，上面将指定的文档索引到customer索引中，ID为1.如果我们再使用不同（或相同）的文档执行上述命令，Elasticsearch将在ID为1的现有文档之上替换（即重新索引）成新文档：
 
 [source,js]
 --------------------------------------------------
@@ -532,7 +532,7 @@ PUT /customer/_doc/1?pretty
 // CONSOLE
 // TEST[continued]
 
-The above changes the name of the document with the ID of 1 from "John Doe" to "Jane Doe". If, on the other hand, we use a different ID, a new document will be indexed and the existing document(s) already in the index remains untouched.
+以上内容将ID为1的文档名称从“John Doe”更改为“Jane Doe”。另一方面，如果我们使用不同的ID，则将索引新文档，并且索引中已有的现有文档保持不变。
 
 [source,js]
 --------------------------------------------------
@@ -544,11 +544,11 @@ PUT /customer/_doc/2?pretty
 // CONSOLE
 // TEST[continued]
 
-The above indexes a new document with an ID of 2.
+以上将索引一个ID为2的新文档。
 
-When indexing, the ID part is optional. If not specified, Elasticsearch will generate a random ID and then use it to index the document. The actual ID Elasticsearch generates (or whatever we specified explicitly in the previous examples) is returned as part of the index API call.
+索引时，ID部分是可选的。如果未指定，Elasticsearch将生成随机ID，然后使用它来索引文档。Elasticsearch生成的实际ID（或前面示例中显式指定的内容）将作为索引API调用的一部分返回。
 
-This example shows how to index a document without an explicit ID:
+此示例显示如何在没有显式ID的情况下索引文档：
 
 [source,js]
 --------------------------------------------------
@@ -560,14 +560,14 @@ POST /customer/_doc?pretty
 // CONSOLE
 // TEST[continued]
 
-Note that in the above case, we are using the `POST` verb instead of PUT since we didn't specify an ID.
+请注意，在上面的情况中，我们使用`POST` 动词而不是PUT，因为我们没有指定ID。
 
 [[getting-started-update-documents]]
-=== Updating Documents
+=== 更新文档
 
-In addition to being able to index and replace documents, we can also update documents. Note though that Elasticsearch does not actually do in-place updates under the hood. Whenever we do an update, Elasticsearch deletes the old document and then indexes a new document with the update applied to it in one shot.
+除了能够索引和替换文档，我们还可以更新文档。请注意，Elasticsearch实际上并没有进行就地更新。每当我们进行更新时，Elasticsearch都会删除旧文档，然后一次性应用更新索引新文档。
 
-This example shows how to update our previous document (ID of 1) by changing the name field to "Jane Doe":
+此示例演示如何通过将名称字段更改为“Jane Doe”来更新以前的文档（ID为1）：
 
 [source,js]
 --------------------------------------------------
@@ -579,7 +579,7 @@ POST /customer/_update/1?pretty
 // CONSOLE
 // TEST[continued]
 
-This example shows how to update our previous document (ID of 1) by changing the name field to "Jane Doe" and at the same time add an age field to it:
+此示例演示如何通过将名称字段更改为“Jane Doe”来更新我们以前的文档（ID为1），同时为其添加年龄字段：
 
 [source,js]
 --------------------------------------------------
@@ -591,7 +591,7 @@ POST /customer/_update/1?pretty
 // CONSOLE
 // TEST[continued]
 
-Updates can also be performed by using simple scripts. This example uses a script to increment the age by 5:
+也可以使用简单脚本执行更新。此示例使用脚本将年龄增加5：
 
 [source,js]
 --------------------------------------------------
@@ -603,14 +603,15 @@ POST /customer/_update/1?pretty
 // CONSOLE
 // TEST[continued]
 
-In the above example, `ctx._source` refers to the current source document that is about to be updated.
+在上面的示例中，`ctx._source` 指的是当前即将更新的源文档。
 
 Elasticsearch provides the ability to update multiple documents given a query condition (like an `SQL UPDATE-WHERE` statement). See {ref}/docs-update-by-query.html[`docs-update-by-query` API]
+Elasticsearch提供了在给定查询条件（就像SQL UPDATE-WHERE语句）的情况下更新多个文档的功能。参见{ref}/docs-update-by-query.html[`docs-update-by-query` API]
 
 [[getting-started-delete-documents]]
-=== Deleting Documents
+=== 删除文档
 
-Deleting a document is fairly straightforward. This example shows how to delete our previous customer with the ID of 2:
+删除文档非常简单。此示例显示如何删除ID为2的以前的customer索引：
 
 [source,js]
 --------------------------------------------------
@@ -619,16 +620,14 @@ DELETE /customer/_doc/2?pretty
 // CONSOLE
 // TEST[continued]
 
-See the {ref}/docs-delete-by-query.html[`_delete_by_query` API] to delete all documents matching a specific query.
-It is worth noting that it is much more efficient to delete a whole index
-instead of deleting all documents with the Delete By Query API.
+请参阅{ref}/docs-delete-by-query.html[`_delete_by_query` API]来删除与特定查询匹配的所有文档。值得注意的是，删除整个索引而不是使用Delete By Query API删除所有文档会更有效。
 
 [[getting-started-batch-processing]]
-=== Batch Processing
+=== 批量处理
 
-In addition to being able to index, update, and delete individual documents, Elasticsearch also provides the ability to perform any of the above operations in batches using the {ref}/docs-bulk.html[`_bulk` API]. This functionality is important in that it provides a very efficient mechanism to do multiple operations as fast as possible with as few network roundtrips as possible.
+除了能够索引，更新和删除单个文档之外，Elasticsearch还提供了使用{ref}/docs-bulk.html[`_bulk` API] 批量执行上述任何操作的功能。此功能非常重要，因为它提供了一种非常有效的机制，可以尽可能快地进行多个操作，并尽可能少地进行网络往返。
 
-As a quick example, the following call indexes two documents (ID 1 - John Doe and ID 2 - Jane Doe) in one bulk operation:
+作为一个简单的示例，以下调用在一个批量操作中索引两个文档（ID 1 - John Doe和ID 2 - Jane Doe）：
 
 [source,js]
 --------------------------------------------------
@@ -640,7 +639,7 @@ POST /customer/_bulk?pretty
 --------------------------------------------------
 // CONSOLE
 
-This example updates the first document (ID of 1) and then deletes the second document (ID of 2) in one bulk operation:
+此示例更新第一个文档（ID为1），然后在一个批量操作中删除第二个文档（ID为2）：
 
 [source,sh]
 --------------------------------------------------
@@ -652,17 +651,17 @@ POST /customer/_bulk?pretty
 // CONSOLE
 // TEST[continued]
 
-Note above that for the delete action, there is no corresponding source document after it since deletes only require the ID of the document to be deleted.
+请注意，对于删除操作，之后没有相应的源文档，因为删除只需要删除文档的ID。
 
-The Bulk API does not fail due to failures in one of the actions. If a single action fails for whatever reason, it will continue to process the remainder of the actions after it. When the bulk API returns, it will provide a status for each action (in the same order it was sent in) so that you can check if a specific action failed or not.
+Bulk API不会因其中一个操作失败而失败。如果单个操作因任何原因失败，它将继续处理其后的其余操作。批量API返回时，它将为每个操作提供一个状态（按照发送的顺序），以便您可以检查特定操作是否失败。
 
 [[getting-started-explore-data]]
-== Exploring Your Data
+== 探索您的数据
 
 [float]
-=== Sample Dataset
+=== 样本数据集
 
-Now that we've gotten a glimpse of the basics, let's try to work on a more realistic dataset. I've prepared a sample of fictitious JSON documents of customer bank account information. Each document has the following schema:
+现在我们已经了解了基础知识，让我们尝试更真实的数据集。我准备了一份关于客户银行账户信息的虚构JSON文档样本。每个文档都有以下架构：
 
 [source,js]
 --------------------------------------------------
@@ -682,12 +681,12 @@ Now that we've gotten a glimpse of the basics, let's try to work on a more reali
 --------------------------------------------------
 // NOTCONSOLE
 
-For the curious, this data was generated using http://www.json-generator.com/[`www.json-generator.com/`], so please ignore the actual values and semantics of the data as these are all randomly generated.
+好奇的是，这些数据是使用http://www.json-generator.com/[`www.json-generator.com/`]生成的，因此请忽略数据的实际值和语义，因为这些都是随机生成的。
 
 [float]
-=== Loading the Sample Dataset
+=== 加载示例数据集
 
-You can download the sample dataset (accounts.json) from https://github.com/elastic/elasticsearch/blob/master/docs/src/test/resources/accounts.json?raw=true[here]. Extract it to our current directory and let's load it into our cluster as follows:
+您可以从https://github.com/elastic/elasticsearch/blob/master/docs/src/test/resources/accounts.json?raw=true[此处]下载样本数据集（accounts.json）。将它解压缩到我们当前的目录，然后将它加载到我们的集群中，如下所示：
 
 [source,sh]
 --------------------------------------------------
