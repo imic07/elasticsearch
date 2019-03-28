@@ -707,7 +707,7 @@ GET /_cat/indices?v
 // TEST[setup:bank]
 ////
 
-And the response:
+响应:
 
 [source,txt]
 --------------------------------------------------
@@ -717,14 +717,14 @@ yellow open   bank  l7sSYV2cQXmu6_4rJWVIww   5   1       1000            0    12
 // TESTRESPONSE[s/128.6kb/\\d+(\\.\\d+)?[mk]?b/]
 // TESTRESPONSE[s/l7sSYV2cQXmu6_4rJWVIww/.+/ _cat]
 
-Which means that we just successfully bulk indexed 1000 documents into the bank index.
+这意味着我们只是成功地将1000个文档批量索引到bank索引中。
 
 [[getting-started-search-API]]
-=== The Search API
+=== 搜索API
 
-Now let's start with some simple searches. There are two basic ways to run searches: one is by sending search parameters through the {ref}/search-uri-request.html[REST request URI] and the other by sending them through the {ref}/search-request-body.html[REST request body]. The request body method allows you to be more expressive and also to define your searches in a more readable JSON format. We'll try one example of the request URI method but for the remainder of this tutorial, we will exclusively be using the request body method.
+现在让我们从一些简单的搜索开始吧。运行搜索有两种基本方法：一种是通过{ref}/search-uri-request.html[REST request URI]发送搜索参数，另一种是通过{ref}/search-request-body.html[REST request body]发送。请求体方法允许您更具表现力，并以更可读的JSON格式定义搜索。我们将尝试一个请求URI方法的示例，但是对于本教程的其余部分，我们将专门使用请求体方法。
 
-The REST API for search is accessible from the `_search` endpoint. This example returns all documents in the bank index:
+可以从_search端点访问用于搜索的REST API 。此示例返回bank索引中的所有文档：
 
 [source,js]
 --------------------------------------------------
@@ -733,9 +733,9 @@ GET /bank/_search?q=*&sort=account_number:asc&pretty
 // CONSOLE
 // TEST[continued]
 
-Let's first dissect the search call. We are searching (`_search` endpoint) in the bank index, and the `q=*` parameter instructs Elasticsearch to match all documents in the index. The `sort=account_number:asc` parameter indicates to sort the results using the `account_number` field of each document in an ascending order. The `pretty` parameter, again, just tells Elasticsearch to return pretty-printed JSON results.
+让我们首先剖析搜索调用。我们正在index索引中搜索（`_search` 端点），`q=*` 参数指示Elasticsearch匹配索引中的所有文档。 `sort=account_number:asc` 参数指示每个文档使用 `account_number` 字段以升序对结果进行排序。 `pretty` 参数再次告诉Elasticsearch返回漂亮的JSON结果。
 
-And the response (partially shown):
+响应（部分显示）：
 
 [source,js]
 --------------------------------------------------
@@ -776,18 +776,17 @@ And the response (partially shown):
 // TESTRESPONSE[s/"took" : 63/"took" : $body.took/]
 // TESTRESPONSE[s/\.\.\./$body.hits.hits.2, $body.hits.hits.3, $body.hits.hits.4, $body.hits.hits.5, $body.hits.hits.6, $body.hits.hits.7, $body.hits.hits.8, $body.hits.hits.9/]
 
-As for the response, we see the following parts:
+对于响应，我们看到以下部分：
 
-* `took` – time in milliseconds for Elasticsearch to execute the search
-* `timed_out` – tells us if the search timed out or not
-* `_shards` – tells us how many shards were searched, as well as a count of the successful/failed searched shards
-* `hits` – search results
-* `hits.total` – an object that contains information about the total number of documents matching our search criteria
-** `hits.total.value` - the value of the total hit count (must be interpreted in the context of `hits.total.relation`).
-** `hits.total.relation` - whether `hits.total.value` is the exact hit count, in which case it is equal to `"eq"` or a
-                           lower bound of the total hit count (greater than or equals), in which case it is equal to `gte`.
-* `hits.hits` – actual array of search results (defaults to first 10 documents)
-* `hits.sort` - sort key for results (missing if sorting by score)
+* `took` – Elasticsearch执行搜索的时间（以毫秒为单位）
+* `timed_out` – 告诉我们搜索是否超时
+* `_shards` – 告诉我们搜索了多少个分片，以及搜索成功/失败分片的计数
+* `hits` – 搜索结果
+* `hits.total` – 包含与我们的搜索条件匹配的文档总数的信息对象
+** `hits.total.value` - 总命中数的值（必须在上下文hits.total.relation中解释执行）。
+** `hits.total.relation` - `hits.total.value` 是否是确切的命中计数，在这种情况下它等于"eq"或总命中数的下限（大于或等于），在这种情况下它等于gte。
+* `hits.hits` – 实际的搜索结果数组（默认最前面10个文档）
+* `hits.sort` - 对结果进行排序键（如果按score排序则此字段不存在）sort key for results (missing if sorting by score)
 * `hits._score` and `max_score` - ignore these fields for now
 
 The accuracy of `hits.total` is controlled by the request parameter `track_total_hits`, when set to true
