@@ -1,12 +1,12 @@
 [glossary]
 [[glossary]]
-= Glossary of terms
+= 专业术语
 
 [glossary]
-[[glossary-analysis]] analysis ::
+[[glossary-analysis]] 分析（analysis） ::
 
-Analysis is the process of converting <<glossary-text,full text>> to
-<<glossary-term,terms>>. Depending on which analyzer is used, these phrases:
+分析是将 <<glossary-text,full text>>转换为<<glossary-term,terms>>的过程。根据使用的分析器，这些短语： FOO BAR，Foo-Bar，foo,bar可能会形成术语foo和bar。这些术语是实际存储在索引中的内容。全文查询（非<<glossary-term,term>>查询）FoO:bAR也将被分析为术语foo，bar因此将匹配存储在索引中的术语。正是这种分析过程（在索引时和搜索时）都允许Elasticsearch执行全文查询。另见文字和术语。
+ Depending on which analyzer is used, these phrases:
 `FOO BAR`, `Foo-Bar`, `foo,bar` will probably all result in the
 terms `foo` and `bar`. These terms are what is actually stored in
 the index.
